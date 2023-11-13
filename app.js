@@ -1,10 +1,9 @@
 const express = require('express')
-const bodyparser = require('body-parser')
-
+const mongoose = require('mongoose')
 const placeRoutes = require('./routes/place-routes')
 const userRoutes = require('./routes/user-routes')
 const bodyParser = require('body-parser')
-
+const mongoURI = process.env.MONGO_URI
 const app = express()
 
 app.use(bodyParser.json())
@@ -21,4 +20,9 @@ app.use((error, req, res, next) => {
     res.json({message: error.message || 'An unknown error occurred'})
 })
 
-app.listen(8000)
+mongoose
+    .connect(mongoURI)
+    .then(() => {
+        app.listen(8000)
+    })
+    .catch(err => console.log(err))
